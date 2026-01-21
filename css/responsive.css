@@ -172,4 +172,8 @@
     .navbar-collapse {
         padding-left: 1rem !important;
     }
+
+    .form-keberatan {
+        width: 100%;
+    }
 }

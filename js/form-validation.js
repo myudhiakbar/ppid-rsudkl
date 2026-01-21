@@ -458,3 +458,197 @@ function clearAllMessages() {
         el.classList.remove('is-valid', 'is-invalid');
     });
 }
+
+/**
+ * ===== VALIDASI FORM PENGAJUAN KEBERATAN =====
+ * Setup validasi untuk form pengajuan keberatan
+ */
+function setupFieldValidationKeberatan() {
+    const formKeberatan = document.querySelector('.form-keberatan');
+    if (!formKeberatan) return;
+
+    const fields = {
+        namaLengkap: document.querySelector('input[name="namaLengkap"]'),
+        email: document.querySelector('input[name="email"]'),
+        nomorPermohonan: document.querySelector('input[name="nomorPermohonan"]'),
+        alasanKeberatan: document.querySelector('textarea[name="alasanKeberatan"]')
+    };
+
+    // Validasi Nama Lengkap
+    if (fields.namaLengkap) {
+        fields.namaLengkap.addEventListener('blur', function() {
+            validateRequired(this, 'Nama Lengkap');
+        });
+    }
+
+    // Validasi Email
+    if (fields.email) {
+        fields.email.addEventListener('blur', function() {
+            validateEmail(this);
+        });
+    }
+
+    // Validasi Nomor Permohonan
+    if (fields.nomorPermohonan) {
+        fields.nomorPermohonan.addEventListener('blur', function() {
+            validateRequired(this, 'Nomor Permohonan Awal');
+        });
+    }
+
+    // Validasi Alasan Keberatan
+    if (fields.alasanKeberatan) {
+        fields.alasanKeberatan.addEventListener('blur', function() {
+            validateRequired(this, 'Alasan Keberatan');
+        });
+    }
+}
+
+/**
+ * Validasi form keberatan
+ */
+function validateFormKeberatan() {
+    let isValid = true;
+
+    // Validasi Nama Lengkap
+    const namaLengkapInput = document.querySelector('input[name="namaLengkap"]');
+    if (namaLengkapInput && !validateRequired(namaLengkapInput, 'Nama Lengkap')) {
+        isValid = false;
+    }
+
+    // Validasi Email
+    const emailInput = document.querySelector('input[name="email"]');
+    if (emailInput && !validateEmail(emailInput)) {
+        isValid = false;
+    }
+
+    // Validasi Nomor Permohonan
+    const nomorPermohonanInput = document.querySelector('input[name="nomorPermohonan"]');
+    if (nomorPermohonanInput && !validateRequired(nomorPermohonanInput, 'Nomor Permohonan Awal')) {
+        isValid = false;
+    }
+
+    // Validasi Alasan Keberatan
+    const alasanKeberatanInput = document.querySelector('textarea[name="alasanKeberatan"]');
+    if (alasanKeberatanInput && !validateRequired(alasanKeberatanInput, 'Alasan Keberatan')) {
+        isValid = false;
+    }
+
+    if (!isValid) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Validasi Gagal',
+            html: 'Mohon perbaiki kesalahan pada form.<br><br><strong>• Periksa kembali semua field yang ditandai merah</strong>',
+            confirmButtonColor: '#0a4275',
+            confirmButtonText: 'OK',
+            allowOutsideClick: false,
+            allowEscapeKey: false
+        });
+    }
+
+    return isValid;
+}
+
+/**
+ * Kirim form keberatan ke API
+ */
+function submitFormKeberatanToAPI(form) {
+    const submitBtn = document.querySelector('.btn-simpan');
+    const originalBtnText = submitBtn.textContent;
+    
+    // Disable button dan tampilkan loading
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Mengirim...';
+
+    // Create FormData dari form
+    const formData = new FormData(form);
+
+    // Send to API
+    fetch('api/save-pengajuan-keberatan.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Success
+            showSuccessMessageKeberatan(data.data);
+            form.reset();
+            clearAllMessages();
+        } else {
+            // Error dari API
+            showErrorAlert(data.message, data.errors);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showErrorAlert('Terjadi kesalahan jaringan. Silahkan coba lagi.', [error.message]);
+    })
+    .finally(() => {
+        // Re-enable button
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+    });
+}
+
+/**
+ * Tampilkan pesan sukses untuk form keberatan
+ */
+function showSuccessMessageKeberatan(data) {
+    const successHTML = `
+        <div>
+            <p style="margin-bottom: 1rem;">
+                Terima kasih telah mengajukan pengajuan keberatan. 
+                Pengajuan Anda telah berhasil disimpan dalam sistem.
+            </p>
+            <div style="background-color: #f0f7ff; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                <p style="margin-bottom: 0.5rem;"><strong>📋 Nomor Pengajuan Keberatan:</strong></p>
+                <code style="font-size: 1.1rem; color: #0a4275;">${data.nomor_keberatan}</code>
+                <p style="margin-top: 0.5rem; margin-bottom: 0;"><small style="color: #666;">Salin dan simpan nomor ini untuk tracking status pengajuan keberatan Anda</small></p>
+            </div>
+            <p style="margin-top: 1rem; margin-bottom: 0; font-size: 0.9rem; color: #666;">
+                <strong>📅 Tanggal Pengajuan:</strong> ${new Date(data.tanggal_pengajuan).toLocaleString('id-ID')}
+            </p>
+        </div>
+    `;
+
+    Swal.fire({
+        icon: 'success',
+        title: 'Pengajuan Keberatan Berhasil Diterima!',
+        html: successHTML,
+        confirmButtonColor: '#0a4275',
+        confirmButtonText: 'OK',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            console.log('Pengajuan keberatan berhasil dikirim dengan nomor: ' + data.nomor_keberatan);
+        }
+    }).then(() => {
+        // Reset form setelah menutup alert
+        const form = document.querySelector('form');
+        if (form) {
+            form.reset();
+            clearAllMessages();
+        }
+    });
+}
+
+// Initialize validasi untuk form keberatan
+document.addEventListener('DOMContentLoaded', function() {
+    const formKeberatan = document.querySelector('.form-keberatan');
+    if (formKeberatan) {
+        setupFieldValidationKeberatan();
+        
+        const form = document.querySelector('form');
+        const submitBtn = document.querySelector('.btn-simpan');
+        
+        if (form && submitBtn) {
+            // Override form submission untuk form keberatan
+            submitBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (validateFormKeberatan()) {
+                    submitFormKeberatanToAPI(form);
+                }
+            });
+        }
+    }
+});

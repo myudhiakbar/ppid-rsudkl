@@ -695,3 +695,7 @@ footer {
     margin-top: 0.5rem;
     font-style: italic;
 }
+
+.form-keberatan {
+    width: 50%;
+}
