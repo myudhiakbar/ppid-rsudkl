@@ -323,7 +323,15 @@ function validateForm() {
     if (!validateRadio('cara')) isValid = false;
 
     if (!isValid) {
-        alert('Mohon perbaiki kesalahan pada form.');
+        Swal.fire({
+            icon: 'error',
+            title: 'Validasi Gagal',
+            html: 'Mohon perbaiki kesalahan pada form.<br>Periksa kembali semua field yang ditandai merah',
+            confirmButtonColor: '#0a4275',
+            confirmButtonText: 'OK',
+            allowOutsideClick: false,
+            allowEscapeKey: false
+        });
     }
 
     return isValid;
@@ -372,72 +380,71 @@ function submitFormToAPI(form) {
 }
 
 /**
- * Tampilkan pesan sukses
+ * Tampilkan pesan sukses dengan SweetAlert2
  */
 function showSuccessMessage(data) {
     const successHTML = `
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <div class="d-flex align-items-start">
-                <div>
-                    <h5 class="alert-heading mb-2">✓ Permohonan Berhasil Diterima!</h5>
-                    <p class="mb-2">
-                        Terima kasih telah mengajukan permohonan informasi publik. 
-                        Permohonan Anda telah berhasil disimpan dalam sistem.
-                    </p>
-                    <hr class="my-2">
-                    <p class="mb-1"><strong>Nomor Permohonan:</strong> <code>${data.nomor_permohonan}</code></p>
-                    <p class="mb-1"><strong>Tanggal Permohonan:</strong> ${new Date(data.tanggal_permohonan).toLocaleString('id-ID')}</p>
-                    <p class="mb-0 text-muted">
-                        Silahkan simpan nomor permohonan ini untuk tracking status permohonan Anda.
-                    </p>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div>
+            <p style="margin-bottom: 1rem;">
+                Terima kasih telah mengajukan permohonan informasi publik. 
+                Permohonan Anda telah berhasil disimpan dalam sistem.
+            </p>
+            <div style="background-color: #f0f7ff; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                <p style="margin-bottom: 0.5rem;"><strong>📋 Nomor Permohonan:</strong></p>
+                <code style="font-size: 1.1rem; color: #0a4275;">${data.nomor_permohonan}</code>
+                <p style="margin-top: 0.5rem; margin-bottom: 0;"><small style="color: #666;">Salin dan simpan nomor ini untuk tracking status permohonan Anda</small></p>
             </div>
+            <p style="margin-top: 1rem; margin-bottom: 0; font-size: 0.9rem; color: #666;">
+                <strong>📅 Tanggal Permohonan:</strong> ${new Date(data.tanggal_permohonan).toLocaleString('id-ID')}
+            </p>
         </div>
     `;
 
-    // Insert before form
-    const form = document.querySelector('form');
-    const container = form.closest('.form-wrapper');
-    container.insertAdjacentHTML('beforeend', successHTML);
-
-    // Scroll to message
-    document.querySelector('.alert-success').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    Swal.fire({
+        icon: 'success',
+        title: 'Permohonan Berhasil Diterima!',
+        html: successHTML,
+        confirmButtonColor: '#0a4275',
+        confirmButtonText: 'OK',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            // Animasi konfetti (opsional)
+            console.log('Form berhasil dikirim atas nama: ' + data.nama_lengkap);
+        }
+    }).then(() => {
+        // Reset form setelah menutup alert
+        const form = document.querySelector('form');
+        if (form) {
+            form.reset();
+            clearAllMessages();
+        }
+    });
 }
 
 /**
- * Tampilkan error alert
+ * Tampilkan error alert dengan SweetAlert2
  */
 function showErrorAlert(message, errors = []) {
     let errorContent = `<strong>${message}</strong>`;
     
     if (Array.isArray(errors) && errors.length > 0) {
-        errorContent += '<ul class="mb-0 mt-2">';
+        errorContent += '<ul style="text-align: left; margin: 1rem 0 0 0; padding-left: 1.5rem;">';
         errors.forEach(error => {
-            errorContent += `<li>${error}</li>`;
+            errorContent += `<li style="margin-bottom: 0.5rem;">${error}</li>`;
         });
         errorContent += '</ul>';
     }
 
-    const errorHTML = `
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <div class="d-flex align-items-start">
-                <div>
-                    <h5 class="alert-heading mb-2">✗ Error Pengiriman</h5>
-                    ${errorContent}
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        </div>
-    `;
-
-    // Insert before form
-    const form = document.querySelector('form');
-    const container = form.closest('.form-wrapper');
-    container.insertAdjacentHTML('beforeend', errorHTML);
-
-    // Scroll to message
-    document.querySelector('.alert-danger').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    Swal.fire({
+        icon: 'error',
+        title: 'Terjadi Kesalahan',
+        html: errorContent,
+        confirmButtonColor: '#dc3545',
+        confirmButtonText: 'Coba Lagi',
+        allowOutsideClick: false,
+        allowEscapeKey: false
+    });
 }
 
 /**
