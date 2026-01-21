@@ -1,0 +1,173 @@
+/* ===== RESPONSIVE MEDIA QUERIES ===== */
+
+/* Navbar Toggler - Max width 1400px */
+@media (max-width: 1400px) {
+    .navbar-toggler {
+        display: block !important;
+        border: none;
+        padding: 0.5rem 0.75rem;
+        background-color: transparent;
+        transition: all 0.3s ease;
+    }
+
+    .navbar-toggler:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+    .collapse:not(.show) {
+        display: none !important;
+    }
+
+    .navbar-collapse {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: white;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border-top: 1px solid #e9ecef;
+        z-index: 1000;
+    }
+
+    .navbar-collapse.show {
+        display: block !important;
+        padding-left: 5rem;
+    }
+
+    .navbar-nav .nav-link {
+        padding: 0.8rem 1.5rem !important;
+        border-bottom: 1px solid #f0f0f0;
+        color: #0a4275 !important;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link:focus {
+        background-color: #e8f2fc;
+        padding-left: 2rem !important;
+        padding-left: 2rem !important;
+    }
+
+    .navbar-nav .nav-link.active {
+        background-color: #e8f2fc;
+        color: #0a4275 !important;
+        border-left: 4px solid #0a4275;
+        padding-left: 1.2rem !important;
+    }
+
+    .ms-lg-3 {
+        margin: 0.8rem 1.5rem !important;
+    }
+}
+
+/* Desktop view - 3 items */
+@media (min-width: 992px) {
+    .owl-carousel .owl-item img {
+        height: 350px;
+    }
+}
+
+/* Tablet view - 2 items */
+@media (min-width: 768px) and (max-width: 991px) {
+    .owl-carousel .owl-item img {
+        height: 300px;
+    }
+}
+
+/* Mobile view - 1 item */
+@media (max-width: 767px) {
+    .owl-carousel .owl-item img {
+        height: 200px !important;
+        object-fit: contain;
+    }
+
+    .image-carousel-section {
+        padding: 3rem 0 1rem 0;
+    }
+
+    /* Infografis - Show only 1 item per slide on mobile */
+    #infografisCarousel .carousel-item .row > .col-12:nth-child(n+2) {
+        display: none !important;
+    }
+
+    .infografis-card {
+        max-width: 100%;
+    }
+
+    .infografis-image {
+        aspect-ratio: 3 / 4;
+        height: auto;
+    }
+
+    .infografis-image img {
+        height: 100% !important;
+        width: 100% !important;
+    }
+
+    /* Section */
+
+    /* .info-header {
+        padding: 3rem 0;
+    } */
+
+    #button-section {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    #features {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .section-padding {
+        padding-left: 1rem;
+        padding-right:1rem;
+    }
+
+    .table-container {
+        width: 100%;
+    }
+
+    .table {
+        font-size: 0.9rem;
+    }
+
+    .table tbody td {
+        padding: 1rem 0.75rem;
+    }
+
+    .info-image {
+        max-height: 250px;
+    }
+
+    .btn-view-doc {
+        padding: 0.1rem 1.5rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .info-btn {
+        min-height: 80px;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 40px;
+        height: 40px;
+        border: 1.5px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .navbar-collapse {
+        padding-left: 1rem !important;
+    }
+}
