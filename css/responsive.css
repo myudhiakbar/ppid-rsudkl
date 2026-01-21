@@ -37,7 +37,7 @@
 
     .navbar-nav .nav-link {
         padding: 0.8rem 1.5rem !important;
-        border-bottom: 1px solid #f0f0f0;
+        /* border-bottom: 1px solid #f0f0f0; */
         color: #0a4275 !important;
         font-weight: 500;
         transition: all 0.3s ease;
@@ -50,12 +50,12 @@
         padding-left: 2rem !important;
     }
 
-    .navbar-nav .nav-link.active {
+    /* .navbar-nav .nav-link.active {
         background-color: #e8f2fc;
         color: #0a4275 !important;
         border-left: 4px solid #0a4275;
         padding-left: 1.2rem !important;
-    }
+    } */
 
     .ms-lg-3 {
         margin: 0.8rem 1.5rem !important;
