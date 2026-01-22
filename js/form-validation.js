@@ -509,21 +509,15 @@ function setupFieldValidationKeberatan() {
 function validateFormKeberatan() {
     let isValid = true;
 
-    // Validasi Nama Lengkap
-    const namaLengkapInput = document.querySelector('input[name="namaLengkap"]');
-    if (namaLengkapInput && !validateRequired(namaLengkapInput, 'Nama Lengkap')) {
+    // Validasi Nomor Permohonan
+    const nomorPermohonanInput = document.querySelector('input[name="nomorPermohonan"]');
+    if (nomorPermohonanInput && !validateRequired(nomorPermohonanInput, 'Nomor Permohonan Awal')) {
         isValid = false;
     }
 
     // Validasi Email
     const emailInput = document.querySelector('input[name="email"]');
     if (emailInput && !validateEmail(emailInput)) {
-        isValid = false;
-    }
-
-    // Validasi Nomor Permohonan
-    const nomorPermohonanInput = document.querySelector('input[name="nomorPermohonan"]');
-    if (nomorPermohonanInput && !validateRequired(nomorPermohonanInput, 'Nomor Permohonan Awal')) {
         isValid = false;
     }
 
